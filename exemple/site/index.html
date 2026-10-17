@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>MineNorth Stats</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="dot"></span><b>MineNorth</b> Stats</div>
+  <nav id="tabs"></nav>
+  <div class="ctl">
+    <label>Période
+      <select id="period">
+        <option value="14">14 jours</option>
+        <option value="30" selected>30 jours</option>
+        <option value="90">90 jours</option>
+        <option value="0">Tout</option>
+      </select>
+    </label>
+  </div>
+</header>
+<main id="view"><p class="muted pad">Chargement…</p></main>
+<footer class="foot" id="foot"></footer>
+<dialog id="fiche"></dialog>
+<script src="data.js"></script>
+<script src="chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

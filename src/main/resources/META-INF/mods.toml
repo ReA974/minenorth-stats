@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved - MineNorthRP"
+
+[[mods]]
+modId="minenorthstats"
+version="1.0.0"
+displayName="MineNorth Stats"
+authors="MineNorth RP"
+description='''Statistiques des joueurs (connexions, retention, activites, patrimoine) et site web de tableaux de bord genere par le serveur.'''
+
+[[dependencies.minenorthstats]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.minenorthstats]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
