@@ -22,6 +22,17 @@ public final class Data {
     public List<Point> series = new ArrayList<>();
     /** jour -> économie du serveur (dernier relevé du jour). */
     public Map<String, Eco> eco = new TreeMap<>();
+    /** jour -> argent créé / détruit (centimes), admins et OP exclus. */
+    public Map<String, Money> money = new TreeMap<>();
+    /** Cumul depuis le début du suivi (n'est pas effacé par la durée de conservation). */
+    public Money moneyTot = new Money();
+
+    /** Masse d'argent créée (entre dans l'économie) et détruite (en sort), par source ; « ex » = mouvements des admins et OP, exclus des totaux. */
+    public static final class Money {
+        public long created, destroyed, exCreated, exDestroyed;
+        public Map<String, Long> cSrc = new TreeMap<>();
+        public Map<String, Long> dSrc = new TreeMap<>();
+    }
 
     public static final class Point {
         public long t;

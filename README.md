@@ -40,5 +40,14 @@ Dans `config/minenorth_stats.toml`, section `[http]` : `actif = true`, `port` (8
 ## Limites connues
 Les compteurs détaillés par jour du site portent sur les 60 derniers jours (le cumul depuis l'arrivée est conservé). Les jours sont ceux du fuseau du serveur. Rétention : un joueur est « actif » un jour s'il s'est connecté ce jour-là. Un arrêt brutal du serveur peut perdre au plus N minutes de données.
 
+## Argent créé contre argent détruit (04/11)
+
+- Onglet **Économie** du site : masse d'argent créée (salaires, ventes aux PNJ, drogue, planche à billets, primes, remboursements…) et détruite (achats aux PNJ et en boutique, amendes, taxes, frais, réparations…), sur la période choisie et en cumulé, avec le solde net, un graphique par jour, la courbe du solde cumulé et le détail par source.
+- Source unique : les événements `MoneyFlowEvent` de minenorth-api (trésor public et banque), donc rien à brancher mod par mod.
+- **Admins et OP exclus** : permission 2 (connecté, ou liste des OP s'il est hors ligne) ou rôle staff du panneau admin. Leurs mouvements sont comptés à part (affichés en petit sous le solde cumulé).
+- Données : `money` (par jour, effacées avec la durée de conservation) et `moneyTot` (cumul, jamais effacé) dans `stats.json`.
+- Limites : les espèces créées par un mod sans passer par le trésor ni déclarer `MoneyFlow.created` ne sont pas vues (par exemple le butin des braquages et le receleur du mod Vol), ni l'argent ajouté par les admins (exclu de toute façon).
+- Compile maintenant contre minenorth-api (builder minenorth-api d'abord).
+
 ## Licence
 **Tous droits réservés - MineNorthRP.** Voir [LICENSE](LICENSE). Chart.js : MIT (en-tête conservé dans `chart.umd.min.js`).

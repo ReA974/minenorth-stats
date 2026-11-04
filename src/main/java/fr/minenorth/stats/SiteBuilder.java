@@ -170,6 +170,8 @@ public final class SiteBuilder {
         }
         root.add("series", series);
         root.add("eco", GSON.toJsonTree(d.eco));
+        root.add("money", GSON.toJsonTree(d.money == null ? Map.of() : d.money));
+        root.add("moneyTot", GSON.toJsonTree(d.moneyTot == null ? new Data.Money() : d.moneyTot));
 
         List<Map.Entry<String, long[]>> its = new ArrayList<>(items.entrySet());
         its.sort((a, b) -> Long.compare(b.getValue()[0], a.getValue()[0]));

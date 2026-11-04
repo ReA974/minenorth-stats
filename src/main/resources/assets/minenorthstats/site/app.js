@@ -263,6 +263,7 @@
     function flow(key) { return days.map(function (d) { return sum(P.map(function (p) { var r = p.days[d]; return r && r.c[key] ? r.c[key] : 0; })) / 100; }); }
     chart(c4, { type: 'bar', data: { labels: days.map(fday), datasets: [ds('Revenus', flow('revenus_c'), COL.green), ds('Dépenses', flow('depenses_c'), COL.red), ds('Salaires', flow('salaires_c'), COL.cyan)] }, options: { scales: { y: { beginAtZero: true } } } });
     root.appendChild(g);
+    renderMoneyFlow(root, days);
     var g2 = grid('cols2'); g2.style.marginTop = '16px';
     var c5 = card('Les plus gros patrimoines', 'Top 20 des soldes'); g2.appendChild(c5);
     var top = bals.slice().sort(function (a, b) { return b.bal - a.bal; }).slice(0, 20);
@@ -277,6 +278,49 @@
     c6.insertAdjacentHTML('beforeend', h2 + '</tbody></table></div>' + (comp.length ? '' : '<p class="muted">Aucune donnée d’entreprise.</p>'));
     g2.appendChild(c6);
     root.appendChild(g2);
+  }
+
+  // Argent créé (salaires, ventes aux PNJ, drogue, printer, primes…) contre argent détruit (achats, amendes, taxes, frais…), admins et OP exclus.
+  var SRC = { etat: 'État', drogue: 'Drogue', printer: 'Planche à billets', livraison: 'Livraisons', shops: 'Boutiques', garage: 'Garage', police: 'Police',
+    secours: 'Secours', gang: 'Gangs', portes: 'Immobilier', entreprises: 'Entreprises', permis: 'Permis', casino: 'Casino', bar: 'Bar', vol: 'Vol' };
+  function srcName(k) { var i = k.indexOf(':'); var m = i < 0 ? k : k.slice(0, i); return (SRC[m] || m) + (i < 0 ? '' : ' · ' + k.slice(i + 1).replace(/[_-]/g, ' ')); }
+  function renderMoneyFlow(root, days) {
+    var M = D.money || {}, T = D.moneyTot || { created: 0, destroyed: 0, exCreated: 0, exDestroyed: 0, cSrc: {}, dSrc: {} };
+    var pc = 0, pd = 0, cS = {}, dS = {};
+    days.forEach(function (d) {
+      var m = M[d]; if (!m) return;
+      pc += m.created; pd += m.destroyed;
+      Object.keys(m.cSrc || {}).forEach(function (k) { cS[k] = (cS[k] || 0) + m.cSrc[k]; });
+      Object.keys(m.dSrc || {}).forEach(function (k) { dS[k] = (dS[k] || 0) + m.dSrc[k]; });
+    });
+    var h = el('<h3 class="pad" style="margin:22px 0 6px">Argent créé contre argent détruit <span class="muted" style="font-size:.8em;font-weight:400">(admins et OP exclus)</span></h3>');
+    root.appendChild(h);
+    var k = grid('kpis');
+    k.appendChild(kpi(eur(pc), 'Créé sur la période', 'salaires, ventes aux PNJ, drogue, printer…'));
+    k.appendChild(kpi(eur(pd), 'Détruit sur la période', 'achats, amendes, taxes, frais…'));
+    k.appendChild(kpi((pc - pd >= 0 ? '+' : '') + eur(pc - pd), 'Solde net de la période', pc - pd >= 0 ? 'la masse d’argent grossit' : 'la masse d’argent fond'));
+    k.appendChild(kpi(eur(T.created), 'Créé depuis le début'));
+    k.appendChild(kpi(eur(T.destroyed), 'Détruit depuis le début'));
+    k.appendChild(kpi((T.created - T.destroyed >= 0 ? '+' : '') + eur(T.created - T.destroyed), 'Solde net cumulé', 'exclu (staff) : +' + eur(T.exCreated) + ' / −' + eur(T.exDestroyed)));
+    root.appendChild(k);
+    var g = grid('cols2'); g.style.marginTop = '16px';
+    var c1 = card('Créé / détruit par jour', 'En euros ; la ligne est le solde net du jour'); g.appendChild(c1);
+    var cr = days.map(function (d) { return M[d] ? M[d].created / 100 : 0; }), de = days.map(function (d) { return M[d] ? M[d].destroyed / 100 : 0; });
+    chart(c1, { type: 'bar', data: { labels: days.map(fday), datasets: [ds('Créé', cr, COL.green), ds('Détruit', de.map(function (v) { return -v; }), COL.red),
+      ds('Solde net', cr.map(function (v, i) { return +(v - de[i]).toFixed(2); }), COL.cyan, { type: 'line' })] }, options: { scales: { x: { stacked: true }, y: { stacked: false } } } });
+    var c2 = card('Solde net cumulé', 'Masse créée moins masse détruite depuis le début de la période (€)'); g.appendChild(c2);
+    var acc = 0; var cum = days.map(function (d) { acc += M[d] ? (M[d].created - M[d].destroyed) / 100 : 0; return +acc.toFixed(2); });
+    chart(c2, { type: 'line', data: { labels: days.map(fday), datasets: [ds('Cumul (€)', cum, COL.violet, { fill: true })] } });
+    function table(title, sub, map, total, color) {
+      var c = card(title, sub); g.appendChild(c);
+      var ks = Object.keys(map).sort(function (a, b) { return map[b] - map[a]; });
+      var t = '<div class="scroll"><table><tbody>';
+      ks.forEach(function (x) { t += '<tr><td>' + esc(srcName(x)) + '</td><td class="num" style="color:' + color + '">' + eur(map[x]) + '</td><td class="num muted">' + pct(map[x], total) + ' %</td></tr>'; });
+      c.insertAdjacentHTML('beforeend', t + '</tbody></table></div>' + (ks.length ? '' : '<p class="muted">Rien sur la période.</p>'));
+    }
+    table('D’où vient l’argent créé', 'Par source, sur la période', cS, pc, COL.green);
+    table('Où part l’argent détruit', 'Par source, sur la période', dS, pd, COL.red);
+    root.appendChild(g);
   }
 
   function renderItems(root) {

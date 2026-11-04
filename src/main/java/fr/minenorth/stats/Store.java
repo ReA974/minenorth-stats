@@ -121,6 +121,8 @@ public final class Store {
         data.hours.keySet().removeIf(k -> k.compareTo(limit) < 0);
         data.heat.keySet().removeIf(k -> k.compareTo(limit) < 0);
         data.eco.keySet().removeIf(k -> k.compareTo(limit) < 0);
+        if (data.money == null) data.money = new java.util.TreeMap<>();
+        data.money.keySet().removeIf(k -> k.compareTo(limit) < 0);
         data.series.removeIf(p -> p.t < limitMs);
         // Séries anciennes (> 7 jours) : un point par heure.
         long recent = System.currentTimeMillis() - 7 * 86_400_000L;

@@ -27,6 +27,7 @@ public class MineNorthStats {
         if (FMLEnvironment.dist != Dist.DEDICATED_SERVER) return;
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StatsConfig.SPEC, "minenorth_stats.toml");
         MinecraftForge.EVENT_BUS.register(new Collector());
+        MinecraftForge.EVENT_BUS.register(new MoneyTracker());
         MinecraftForge.EVENT_BUS.register(this);
     }
 
