@@ -87,8 +87,8 @@ public final class SiteBuilder {
             String label;
             if (anon) label = "Joueur " + id.substring(0, 6).toUpperCase();
             else if (mode.equals("pseudo")) label = r.name.isBlank() ? uuid.substring(0, 8) : r.name;
-            else if (mode.equals("rp")) label = !r.rp.isBlank() ? r.rp : (r.name.isBlank() ? uuid.substring(0, 8) : r.name);
-            else label = uuid.substring(0, 8);
+            else if (r.name.isBlank()) label = !r.rp.isBlank() ? r.rp : uuid.substring(0, 8);
+            else label = !r.rp.isBlank() ? r.rp + " (" + r.name + ")" : r.name;   // nom RP et pseudo
             JsonObject p = new JsonObject();
             p.addProperty("id", id);
             p.addProperty("label", label);

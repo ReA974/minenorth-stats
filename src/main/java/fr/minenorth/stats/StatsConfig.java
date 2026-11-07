@@ -28,8 +28,9 @@ public final class StatsConfig {
         b.push("site");
         SITE_MIN = b.comment("Génère le site dans config/minenorth_stats/site/ toutes les N minutes (0 = seulement avec /stats site).")
                 .defineInRange("siteMinutes", 30, 0, 1440);
-        DISPLAY = b.comment("Identification des joueurs sur le site : \"uuid\" (par défaut, UUID abrégé), \"pseudo\" (pseudo Minecraft) ou \"rp\" (nom RP Prénom Nom).")
-                .define("affichage", "uuid");
+        DISPLAY = b.comment("Identification des joueurs sur le site : \"rp\" (par défaut : nom RP Prénom Nom suivi du pseudo) ou \"pseudo\" (pseudo Minecraft).",
+                "L'ancienne valeur \"uuid\" (UUID abrégé, illisible) vaut maintenant \"rp\".")
+                .define("affichage", "rp");
         ANON = b.comment("Anonymisation : remplace tout identifiant par un code irréversible (« Joueur A1B2C3 »). Prioritaire sur « affichage ».")
                 .define("anonymiser", false);
         b.pop();
@@ -57,8 +58,8 @@ public final class StatsConfig {
     public static boolean skipOps() { return val(SKIP_OPS::get, false); }
     public static boolean anonymize() { return val(ANON::get, false); }
     public static String display() {
-        String s = val(DISPLAY::get, "uuid").trim().toLowerCase(java.util.Locale.ROOT);
-        return s.equals("pseudo") || s.equals("rp") ? s : "uuid";
+        String s = val(DISPLAY::get, "rp").trim().toLowerCase(java.util.Locale.ROOT);
+        return s.equals("pseudo") ? s : "rp";
     }
     public static boolean httpEnabled() { return val(HTTP_ON::get, false); }
     public static int httpPort() { return val(HTTP_PORT::get, 8765); }

@@ -28,7 +28,7 @@ Dans `config/minenorth_stats.toml`, section `[http]` : `actif = true`, `port` (8
 - `/stats oublier <joueur>` : **efface toutes les données d'un joueur** (pseudo, UUID ou nom RP déjà connu). Il sera de nouveau suivi à sa prochaine connexion.
 
 ## Vie privée
-- Par défaut les joueurs sont identifiés par **UUID abrégé** ; `affichage = "pseudo"` ou `"rp"` (nom RP, mod Identité) dans `[site]`.
+- Par défaut les joueurs sont affichés par **nom RP suivi du pseudo** (« Prénom Nom (pseudo) », mod Identité) ; `affichage = "pseudo"` dans `[site]` pour le pseudo seul (l'ancienne valeur `"uuid"` vaut `"rp"`).
 - `anonymiser = true` : plus aucun nom ni UUID dans le site (codes irréversibles « Joueur A1B2C3 », sel aléatoire gardé dans les données du monde).
 - `conservationJours` (180 par défaut) : au-delà, jours, positions, courbes et joueurs inactifs sont effacés (nettoyage quotidien).
 - `ignorerOperateurs` pour ne pas suivre l'équipe.
